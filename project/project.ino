@@ -1,19 +1,3 @@
-/*
-   -- New project --
-   
-   This source code of graphical user interface 
-   has been generated automatically by RemoteXY editor.
-   To compile this code using RemoteXY library 3.1.8 or later version 
-   download by link http://remotexy.com/en/library/
-   To connect using RemoteXY mobile app by link http://remotexy.com/en/download/                   
-     - for ANDROID 4.11.1 or later version;
-     - for iOS 1.9.1 or later version;
-    
-   This source code is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.    
-*/
 
 //////////////////////////////////////////////
 //        RemoteXY include library          //
@@ -22,7 +6,8 @@
 // RemoteXY select connection mode and include library 
 #define REMOTEXY_MODE__SOFTSERIAL
 #include <SoftwareSerial.h>
-
+unsigned long lastReceiveTime = 0;
+unsigned long currentTime = 0;
 #include <RemoteXY.h>
 
 // RemoteXY connection settings 
@@ -59,18 +44,20 @@ struct {
 /////////////////////////////////////////////
 
 
-#define RED_LED 10
-#define BLUE_LED 11
-#define GREEN_LED 9
+#define RED_LED 10 // Red led is connected on PMW pin 10
+#define BLUE_LED 11 // Blue led is connected on PMW pin 11
+#define GREEN_LED 9 // Green led is connected on PMW pin 9
 
 int red_switch = 0;
 int Switch = 0;
 int blue_switch = 0;
 int green_switch = 0;
 int timer = 0;
+int Timer = 0;
 int Rbrightness = 0;
 int Bbrightness = 0;
 int Gbrightness = 0;
+int last_state = 0;
 void setup() 
 {
   RemoteXY_Init (); 
@@ -83,55 +70,130 @@ void setup()
   // TODO you setup code
   
 }
-void TurnON_RED(int r,int timer) {
-   for (int i = 0; i < r; i++) { 
-       analogWrite(RED_LED, Rbrightness);
-       Rbrightness += 1;
-       delay(timer);
-   }
-}
-void TurnON_BLUE(int b,int timer){
-   for (int i = 0; i < b; i++) { 
-       analogWrite(BLUE_LED, Bbrightness);
-       Bbrightness += 1;
-       delay(timer);
-   }
-}
-void TurnON_GREEN(int g,int timer){   
-   for (int i = 0; i < g; i++) { 
-       analogWrite(GREEN_LED, Gbrightness);
-       Gbrightness += 1;
-       delay(timer);
-   }   
-}
-void TurnOFF_RED(int r) {
-   for (int i = 0; i < r; i++) { 
-       analogWrite(RED_LED, r);
-       r-= 1;
-   }
-}
-void TurnOFF_BLUE(int b){
-   for (int i = 0; i < b; i++) { 
-       analogWrite(BLUE_LED, b);
-       b-= 1;
-   }
-}
-void TurnOFF_GREEN(int g){   
-   for (int i = 0; i < g; i++) { 
-       analogWrite(GREEN_LED,g);
-       g-= 1;
-   }   
-}
+void Auto()
+{
+  int RBright = 0;
+  int BBright = 0;
+  int GBright = 0;
+  int rbrightness = 255;
+  int bbrightness = 255;
+  int gbrightness = 255;
+  analogWrite(BLUE_LED,0);
+  analogWrite(GREEN_LED,0);
+  analogWrite(RED_LED,0);
+//    delay(100);
+    for(int i = 0;i<256;i++)
+    {
+      analogWrite(RED_LED,RBright);
+      RBright +=1;
+      delay(Timer);
+      }
+//     delay(Timer+10);
+    
+    for(int  i =0;i<256;i++)
+    {
+      analogWrite(RED_LED,rbrightness);
+      analogWrite(BLUE_LED,BBright);
+      rbrightness -=1;
+      BBright +=1;
+      delay(Timer);
+      }
+      delay(Timer+10);
+    
+    for(int i =0;i<256;i++)
+    {
+      analogWrite(BLUE_LED,bbrightness);
+      bbrightness-=1;
+      delay(Timer);
+      }
+//      delay(Timer+10);
+    
+   for(int i = 0; i<256;i++)
+   {
+    analogWrite(GREEN_LED,GBright);
+    GBright+=1;
+    delay(Timer);
+    }
+//    delay(Timer+10);
+ 
+   for(int i = 0;i<256;i++)
+   {
+    analogWrite(GREEN_LED,gbrightness);
+    analogWrite(RED_LED,RBright);
+    gbrightness-=1;
+    RBright +=1;
+    delay(Timer);
+    }
+//    delay(Timer+10);
+  
+  for(int i = 0;i<256;i++)
+  {
+    analogWrite(RED_LED,rbrightness);
+    rbrightness-=1;
+    delay(Timer);
+    }
+//    delay(Timer+10);
+  
+  for (int i = 0;i<256;i++)
+  {
+    analogWrite(BLUE_LED,BBright);
+    BBright +=1;
+    delay(Timer);
+    }
+//    delay(Timer+10);
+ 
+  for(int i = 0;i<256;i++)
+  {
+    analogWrite(BLUE_LED,bbrightness);
+    analogWrite(GREEN_LED,GBright);
+    bbrightness-=1;
+    GBright+=1;
+    delay(Timer);
+    }
+//    delay(Timer+10);
+  
+  for(int i = 0;i<256;i++)
+  {
+    analogWrite(BLUE_LED,BBright);
+    BBright+=1;
+    delay(Timer);
+    }
+//    delay(Timer+10);
+  
+  for (int i = 0;i<256;i++)
+  {
+    analogWrite(RED_LED,RBright);
+    RBright +=1;
+    delay(Timer);
+    }
+//    delay(Timer+10);
+ 
+ for(int i= 0;i<256;i++)
+ {
+  analogWrite(RED_LED,rbrightness);
+  analogWrite(BLUE_LED,bbrightness);
+  analogWrite(GREEN_LED,gbrightness);
+  rbrightness-=1;
+  bbrightness-=1;
+  gbrightness-=1;
+  delay(Timer);
+  }
+//  delay(Timer+10);
+  
+  
+  }
 
 void loop() 
 { 
+  
   RemoteXY_Handler ();
   red_switch = RemoteXY.RED;
   blue_switch = RemoteXY.BLUE;
   green_switch = RemoteXY.GREEN;
   Switch = RemoteXY.SWITCH;
   timer = RemoteXY.TIMER;
-  if (Switch == 0){
+  Timer = map(timer,0,100,1,10);  
+  if(Switch == 0){
      int rBright = 0;
      int bBright = 0;
      int gBright = 0;
@@ -140,10 +202,12 @@ void loop()
      gBright = map(green_switch,0,100,0,255);
      analogWrite(BLUE_LED,bBright);
      analogWrite(GREEN_LED,gBright);
-     analogWrite(RED_LED,rBright);
+     analogWrite(RED_LED,rBright);     
     }
- 
-  
+  if(Switch == 1){
+    Auto();}
+    
+        
 }
   
    
