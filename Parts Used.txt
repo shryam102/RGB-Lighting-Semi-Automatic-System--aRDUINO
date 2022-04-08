@@ -1,0 +1,9 @@
+Parts Used
+
+Arduino Uno - 1
+HC-05 Bluetooth Module -1
+12v power supply
+IRFzn44 mosfets(logic mosfet N type) - 3
+rgb strip
+10k resistor - 3
+
